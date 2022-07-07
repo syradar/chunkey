@@ -81,7 +81,7 @@ const Home: NextPage = () => {
           {hello.data ? (
             <p>
               {hello.data.map((d) => (
-                <div>{d.id}</div>
+                <div key={d.id}>{d.id}</div>
               ))}
             </p>
           ) : (
