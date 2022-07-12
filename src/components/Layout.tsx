@@ -10,7 +10,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="text-slate-50 w-full min-h-screen flex flex-col p-4 overflow-y-scroll bg-slate-900">
+      <div className="flex min-h-screen w-full flex-col overflow-y-scroll bg-slate-900 p-4 text-slate-50">
         <Header />
         {children}
       </div>

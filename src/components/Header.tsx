@@ -1,7 +1,8 @@
 import { Menu, Transition } from '@headlessui/react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { Fragment } from 'react'
+import Link, { LinkProps } from 'next/link'
+import { forwardRef, Fragment, HTMLProps } from 'react'
 import { classNames } from '../utils/classNames'
 
 export const Header = () => {
@@ -14,13 +15,18 @@ export const Header = () => {
 
   return (
     <header className="flex justify-between">
-      <h2 className="text-purple-300 font-extrabold">Chunkey</h2>
+      <h2 className="font-extrabold hover:text-purple-300">
+        <Link href="/">Chunkey</Link>
+      </h2>
       {authenticated && (
         <ProfileDropdown name={name} email={email} imageUrl={imageUrl} />
       )}
 
       {!authenticated && (
-        <button type="button" onClick={() => signIn('github', {})}>
+        <button
+          type="button"
+          onClick={() => signIn('github', { redirect: true })}
+        >
           Login with GitHub
         </button>
       )}
@@ -42,9 +48,9 @@ const ProfileDropdown = ({
       <Menu.Button className="px-2 py-1 hover:text-purple-300">
         {imageUrl && (
           <div>
-            <div className="rounded-full w-8 h-8 border-2 border-transparent hover:border-white">
+            <div className="h-8 w-8 rounded-full border-2 border-transparent hover:border-white">
               <Image
-                className="rounded-full w-8 h-8"
+                className="h-8 w-8 rounded-full"
                 src={imageUrl}
                 alt={name}
                 width={32}
@@ -67,8 +73,8 @@ const ProfileDropdown = ({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-2 flex flex-col gap-2">
+        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-slate-800 shadow-lg ring-1 ring-black/5 focus:outline-none">
+          <div className="flex flex-col gap-2 p-2">
             {email && (
               <Menu.Item>
                 <div className="text-sm">Logged in as {email}</div>
@@ -76,11 +82,24 @@ const ProfileDropdown = ({
             )}
             <Menu.Item>
               {({ active }) => (
+                <NextMenuLink
+                  href="/profile"
+                  className={classNames(
+                    active ? 'bg-purple-500' : '',
+                    'block px-4 py-2 text-sm w-full text-left rounded-lg font-medium',
+                  )}
+                >
+                  Profile
+                </NextMenuLink>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
                 <button
                   type="button"
                   onClick={() => signOut({})}
                   className={classNames(
-                    active ? 'bg-purple-500' : 'bg-slate-700',
+                    active ? 'bg-purple-500' : '',
                     'block px-4 py-2 text-sm w-full text-left rounded-lg font-medium',
                   )}
                 >
@@ -94,3 +113,18 @@ const ProfileDropdown = ({
     </Menu>
   )
 }
+
+const NextMenuLink = forwardRef<
+  HTMLAnchorElement,
+  LinkProps & HTMLProps<HTMLAnchorElement>
+>(({ href, children, ...rest }, ref) => {
+  return (
+    <Link href={href}>
+      <a ref={ref} {...rest}>
+        {children}
+      </a>
+    </Link>
+  )
+})
+
+NextMenuLink.displayName = 'NextMenuLink'

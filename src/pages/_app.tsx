@@ -1,13 +1,12 @@
 // src/pages/_app.tsx
 import { withTRPC } from '@trpc/next'
-import type { AppRouter } from '../server/router'
+import { SessionProvider } from 'next-auth/react'
 import type { AppType } from 'next/dist/shared/lib/utils'
 import superjson from 'superjson'
-import { SessionProvider } from 'next-auth/react'
-import '../styles/globals.css'
 import { AuthWrapper } from '../components/AuthWrapper'
-import { Header } from '../components/Header'
 import { Layout } from '../components/Layout'
+import type { AppRouter } from '../server/router'
+import '../styles/globals.css'
 
 const MyApp: AppType = ({
   Component,
@@ -35,7 +34,7 @@ const getBaseUrl = () => {
 }
 
 export default withTRPC<AppRouter>({
-  config({ ctx }) {
+  config({ ctx: _ctx }) {
     /**
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
