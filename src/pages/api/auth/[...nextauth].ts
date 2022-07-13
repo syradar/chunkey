@@ -8,6 +8,13 @@ import { prisma } from '../../../server/db/client'
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
+  callbacks: {
+    session({ session, user }) {
+      // Save the user's ID in the session
+      session.userId = user.id
+      return session
+    },
+  },
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
