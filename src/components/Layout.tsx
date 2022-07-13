@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { Header } from './Header'
+import { ProfileProvider } from './ProfileProvider'
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -10,10 +11,12 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex min-h-screen w-full flex-col overflow-y-scroll bg-slate-900 p-4 text-slate-50">
-        <Header />
-        {children}
-      </div>
+      <ProfileProvider>
+        <div className="flex min-h-screen w-full flex-col overflow-y-scroll bg-slate-900 text-slate-50">
+          <Header />
+          {children}
+        </div>
+      </ProfileProvider>
     </>
   )
 }

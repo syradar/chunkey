@@ -4,20 +4,23 @@ import Image from 'next/image'
 import Link, { LinkProps } from 'next/link'
 import { forwardRef, Fragment, HTMLProps } from 'react'
 import { classNames } from '../utils/classNames'
+import { useProfileContext } from './ProfileProvider'
 
 export const Header = () => {
   const { data, status } = useSession()
+  const profile = useProfileContext()
 
   const authenticated = status === 'authenticated'
-  const name = data?.user?.name ?? 'Guest'
   const email = data?.user?.email ?? undefined
   const imageUrl = data?.user?.image ?? undefined
+  const name = (profile?.displayName || data?.user?.name) ?? undefined
 
   return (
-    <header className="flex justify-between">
-      <h2 className="font-extrabold hover:text-purple-300">
+    <header className="flex items-center justify-between p-4">
+      <h2 className="text-lg font-extrabold hover:text-purple-300">
         <Link href="/">Chunkey</Link>
       </h2>
+      {name}
       {authenticated && (
         <ProfileDropdown name={name} email={email} imageUrl={imageUrl} />
       )}
@@ -39,7 +42,7 @@ const ProfileDropdown = ({
   email,
   imageUrl,
 }: {
-  name: string
+  name?: string
   email?: string
   imageUrl?: string
 }) => {
@@ -61,7 +64,9 @@ const ProfileDropdown = ({
         )}
 
         {!imageUrl && (
-          <span className="text-purple-300">{name.split(' ')[0]}</span>
+          <span className="text-purple-300">
+            {!!name ? name.split(' ')[0] : 'User'}
+          </span>
         )}
       </Menu.Button>
       <Transition
@@ -77,7 +82,9 @@ const ProfileDropdown = ({
           <div className="flex flex-col gap-2 p-2">
             {email && (
               <Menu.Item>
-                <div className="text-sm">Logged in as {email}</div>
+                <div className="text-sm">
+                  Logged in as {name ?? email ?? 'User'}
+                </div>
               </Menu.Item>
             )}
             <Menu.Item>
