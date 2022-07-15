@@ -38,6 +38,7 @@ export const profileRouter = createRouter()
       const profile = await ctx.prisma.profile.create({
         data: {
           displayName: user.name,
+          updatedAt: new Date(),
         },
       })
 

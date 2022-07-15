@@ -39,7 +39,7 @@ const Profile: NextPage = () => {
     try {
       mutateDisplayName.mutate({
         displayName,
-        id: profileId, // + '123',
+        id: profileId,
       })
     } catch (error) {}
   }

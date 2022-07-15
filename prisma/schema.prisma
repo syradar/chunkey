@@ -66,6 +66,29 @@ model VerificationToken {
 // Chunkey models
 
 model Profile {
-  id          String  @id @default(cuid())
+  id          String          @id @default(cuid())
   displayName String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime
+  teams       ProfileInTeam[]
+}
+
+model Team {
+  id        String          @id @default(cuid())
+  name      String?
+  members   ProfileInTeam[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime
+}
+
+model ProfileInTeam {
+  teamId    String
+  team      Team    @relation(fields: [teamId], references: [id])
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id])
+
+  role     String   @default("member") // member, admin
+  joinedAt DateTime @default(now())
+
+  @@unique([teamId, profileId])
 }
